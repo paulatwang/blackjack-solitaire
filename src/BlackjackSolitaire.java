@@ -7,8 +7,8 @@ public class BlackjackSolitaire {
         // Setup empty grid
 
         // Setup drawPile and discardPile
-        this.drawPile = new Deck(52);
-        this.discardPile = new Deck(0);
+        this.drawPile = new Deck();
+        this.discardPile = new Deck();
 
         // display initial grid state
         this.grid = new Grid();
