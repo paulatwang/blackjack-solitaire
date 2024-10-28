@@ -1,12 +1,16 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class BlackjackSolitaire {
     private static int MAX_DISCARDS = 4;
     private static int MAX_PLAYS = 16;
+    private static int GAME_WIDTH = 42;
     private Deck drawPile;
     private Deck discardPile;
     private String[][] grid;
+    private ArrayList<String> positions;
 
     public BlackjackSolitaire(){
         // Setup drawPile and discardPile
@@ -20,12 +24,32 @@ public class BlackjackSolitaire {
                 {"NA", "11", "12", "13", "NA"},
                 {"NA", "14", "15", "16", "NA"}
         };
+
+        // NEW GAME
+        System.out.println("#".repeat(GAME_WIDTH));
+        System.out.println("#                NEW GAME                #");
+        System.out.println("#".repeat(GAME_WIDTH));
+        System.out.println();
+        // Scores
+        System.out.println("#              ~ SCORING ~              #");
+        System.out.println("|       HAND        |      POINTS       |");
+        System.out.println("|     Blackjack     |        10         |");
+        System.out.println("|        21         |         7         |");
+        System.out.println("|        20         |         5         |");
+        System.out.println("|        19         |         4         |");
+        System.out.println("|        18         |         3         |");
+        System.out.println("|        17         |         2         |");
+        System.out.println("|       <=16        |         1         |");
+        System.out.println("|       Bust        |         0         |");
+        System.out.println();
+        // Grid
         printGrid();
+
     }
 
     public void play(){
         /*
-        * Continue until cardsPlaced = 52
+        * Continue until cardsPlayed = MAX_PLAYS
         *   - draw new card
         *   - prompt user to place card on grid OR discard pile
         *       - if grid:
@@ -40,15 +64,18 @@ public class BlackjackSolitaire {
         int cardsPlayed = 0;
         int cardsDiscarded = 0;
 
-//        do {
+        do {
             // Draw new card
-            Card topCard = drawPile.getTopCard();
-            System.out.println("New card: " + topCard.getCard());
+            Card currentCard = drawPile.getTopCard();
+            System.out.println(" Cards played: " + cardsPlayed + " ".repeat(7) +
+                    "Cards discarded: " + cardsDiscarded);
+
+            System.out.println();
+            System.out.println("New card: " + currentCard.getCard());
 
             // Prompt user
             Scanner s = new Scanner(System.in);
-            System.out.println("Discards remaining: " + (MAX_DISCARDS - cardsDiscarded));
-            System.out.print("Select a position <1-16> or select <discard>: ");
+            System.out.print("Select grid position <1-16> or select <discard>: ");
             String input = s.nextLine();
 
             // Validate user response
@@ -70,53 +97,57 @@ public class BlackjackSolitaire {
 
             // Update discard or grid
             if (input.equals("discard")){
+                discardPile.add(currentCard); // add current card to discard pile
                 cardsDiscarded ++;
                 System.out.println("Discards remaining: " + (MAX_DISCARDS - cardsDiscarded));
             } else {
-                System.out.println("Input: " + input);
-                int[] position = getGridPosition(input);
-                System.out.println("Position: " + Arrays.toString(position));
-                updateGrid(position, topCard.getCard());
+                updateGrid(input, currentCard.getCard()); // update grid with current card
                 printGrid();
-                cardsPlayed ++;
+                cardsPlayed++;
             }
-            //
-//        } while (cardsPlayed < MAX_PLAYS);
+        } while (cardsPlayed < MAX_PLAYS);
+
+        // Calculate total
+
 
     }
 
     public void printGrid(){
+        // Heading
+        System.out.println(" " + "=".repeat((GAME_WIDTH - 8)/2) +
+                        " GRID " +
+                        "=".repeat((GAME_WIDTH - 8)/2));
+        // Grid
         for (String[] row : this.grid) {
+            System.out.print("|" + " ".repeat(5));
             for (int j = 0; j < this.grid[0].length; j++) {
                 if (row[j].equals("NA")) {
-                    System.out.print("       ");
+                    System.out.print(" ".repeat(7));
                 } else if (row[j].length() == 1) {
-                    System.out.print(row[j] + "      ");
+                    System.out.print(row[j] + " ".repeat(6));
                 } else {
-                    System.out.print(row[j] + "     ");
+                    System.out.print(row[j] + " ".repeat(5));
                 }
             }
-            System.out.println();
+            System.out.println("|");
         }
-        System.out.println();
+        // Bottom
+        System.out.println("|" + "_".repeat(GAME_WIDTH - 2) + "|");
     }
 
-    public int[] getGridPosition(String input){
-        int[] position = new int[2];
+    public void updateGrid(String input, String newValue){
+        // Get row and col of the input in the grid
+        int row = 0;
+        int col = 0;
         for (int i = 0; i < this.grid.length; i++) {
             for (int j = 0; j < this.grid[0].length; j++) {
                 if (this.grid[i][j].equals(input)){
-                    position[0] = i;
-                    position[1] = j;
+                    row = i;
+                    col = j;
                 }
             }
         }
-        return position;
-    }
-
-    public void updateGrid(int[] position, String newValue){
-        int row = position[0];
-        int col = position[1];
+        // Update grid
         this.grid[row][col] = newValue;
     }
 }
