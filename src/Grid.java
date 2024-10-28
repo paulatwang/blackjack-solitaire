@@ -26,5 +26,19 @@ public class Grid {
             }
             System.out.println();
         }
+        System.out.println();
+    }
+
+    public int[] getGridPosition(String input){
+        int[] position = new int[2];
+        for (int i = 0; i < this.grid.length; i++) {
+            for (int j = 0; j < this.grid[0].length; j++) {
+                if (grid[i][j].equals(input)){
+                    position[0] = i;
+                    position[1] = j;
+                }
+            }
+        }
+        return position;
     }
 }
