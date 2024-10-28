@@ -148,12 +148,10 @@ public class BlackjackSolitaire {
         }
     }
 
-    public int calculatePoints(String[] array){
+    public int calculatePoints(Card[] array){
         int totalPoints = 0;
-        for (String item : array){
-            String suit = item.substring(item.length() - 1);
-            String value = item.substring(0, item.length() - 1);
-//            totalPoints +=
+        for (Card card : array){
+            totalPoints += card.getPoints();
         }
         return totalPoints;
     }
