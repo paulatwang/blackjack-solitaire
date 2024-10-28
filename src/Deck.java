@@ -30,10 +30,13 @@ public class Deck {
         }
     }
 
-    public String getTopCard(Deck deck){
+    public Card getTopCard(){
         Random rand = new Random();
-        Card topCard = cards.remove(rand.nextInt(52));
-        return topCard.getCard();
+        return this.cards.remove(rand.nextInt(52));
+    }
+
+    public void add(Card card){
+        cards.add(card);
     }
 }
 
