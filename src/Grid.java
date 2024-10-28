@@ -9,10 +9,13 @@ public class Grid {
                 {"NA", "14", "15", "16", "NA"}
         };
     }
+    public Grid(String[][] grid){
+        this.grid = grid;
+    }
 
     public void printGrid(){
-        for (String[] row : grid) {
-            for (int j = 0; j < grid[0].length; j++) {
+        for (String[] row : this.grid) {
+            for (int j = 0; j < this.grid[0].length; j++) {
                 if (row[j].equals("NA")) {
                     System.out.print("       ");
                 } else if (row[j].length() == 1) {
