@@ -28,11 +28,14 @@ public class Deck {
         } else {
             System.out.println("Invalid numCards input for Deck");
         }
+        System.out.println("number of cards in deck: " + cards.size());
     }
 
     public Card getTopCard(){
         Random rand = new Random();
-        return this.cards.remove(rand.nextInt(52));
+        int removedInt = rand.nextInt(cards.size());
+        return this.cards.remove(removedInt);
+
     }
 
     public void add(Card card){
