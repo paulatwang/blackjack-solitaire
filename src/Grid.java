@@ -1,5 +1,5 @@
 public class Grid {
-    String[][] grid;
+    private String[][] grid;
 
     public Grid() {
         this.grid = new String[][]{
@@ -33,12 +33,19 @@ public class Grid {
         int[] position = new int[2];
         for (int i = 0; i < this.grid.length; i++) {
             for (int j = 0; j < this.grid[0].length; j++) {
-                if (grid[i][j].equals(input)){
+                if (this.grid[i][j].equals(input)){
                     position[0] = i;
                     position[1] = j;
                 }
             }
         }
         return position;
+    }
+
+    public String[][] updateGrid(int[] position, String newValue){
+        int row = position[0];
+        int col = position[1];
+        this.grid[row][col] = newValue;
+        return this.grid;
     }
 }
