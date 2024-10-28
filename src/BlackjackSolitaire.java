@@ -47,19 +47,25 @@ public class BlackjackSolitaire {
 
             // Prompt user
             Scanner s = new Scanner(System.in);
-            System.out.println("Discards remaining: " + (4 - cardsDiscarded));
+            System.out.println("Discards remaining: " + (MAX_DISCARDS - cardsDiscarded));
             System.out.print("Select a position <1-16> or select <discard>: ");
             String input = s.nextLine();
 
             // Validate user response
-            input = input.toLowerCase();
-            while ((!input.equals("discard")) &&
-                    Integer.parseInt(input) < 0 &&
-                    Integer.parseInt(input) > MAX_PLAYS)
-            {
+            while (true) {
+                input = input.toLowerCase();
+                if (input.equals("discard")){
+                    break; // Input is valid, exit the loop
+                }
+                try {
+                    int inputNum = Integer.parseInt(input);
+                    if (inputNum > 0 && inputNum <= MAX_PLAYS) {
+                        break; // Input is valid, exit the loop
+                    }
+                } catch (NumberFormatException ignored) {
+                }
                 System.out.print("Invalid selection. Select again: ");
                 input = s.nextLine();
-                input = input.toLowerCase();
             }
 
             // Update discard or grid
