@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class BlackjackSolitaire {
@@ -66,13 +65,14 @@ public class BlackjackSolitaire {
         */
         int cardsPlayed = 0;
         int cardsDiscarded = 0;
+        ArrayList<Integer> previousPlays = new ArrayList<>();
 
         // Begin while loop
         do {
             // Draw new card
             Card currentCard = drawPile.getTopCard();
-            System.out.println(" Cards played: " + cardsPlayed + " ".repeat(7) +
-                    "Cards discarded: " + cardsDiscarded);
+            System.out.println("( Cards played: " + cardsPlayed + " ".repeat(7) +
+                    "Cards discarded: " + cardsDiscarded + " )");
             System.out.println();
             System.out.println("New card: " + currentCard.getLabel());
 
@@ -83,13 +83,15 @@ public class BlackjackSolitaire {
 
             // Validate user response
             while (true) {
+                input = input.replaceAll("[^a-zA-Z0-9]", "");
                 input = input.toLowerCase();
                 if (input.equals("discard") && cardsDiscarded < MAX_DISCARDS){
                     break; // Input is valid, exit the loop
                 }
                 try {
                     int inputNum = Integer.parseInt(input);
-                    if (inputNum > 0 && inputNum <= MAX_PLAYS) {
+                    if (inputNum > 0 && inputNum <= MAX_PLAYS && !previousPlays.contains(inputNum)) {
+                        previousPlays.add(inputNum); // add valid input to previousPlays ArrayList
                         break; // Input is valid, exit the loop
                     }
                 } catch (NumberFormatException ignored) { // ignore NumberFormatException
@@ -102,7 +104,7 @@ public class BlackjackSolitaire {
             if (input.equals("discard")){
                 discardPile.add(currentCard); // add current card to discard pile
                 cardsDiscarded ++;
-                System.out.println("Discards remaining: " + (MAX_DISCARDS - cardsDiscarded));
+                System.out.println("( Discards remaining: " + (MAX_DISCARDS - cardsDiscarded) + " )");
             } else {
                 updateGrid(input, currentCard); // update grid with current card
                 printGrid();
@@ -116,7 +118,6 @@ public class BlackjackSolitaire {
         // Row totals
         for (Card[] row : grid){
             int rowPoints = calculatePoints(row);
-            System.out.println("Row points: " + rowPoints);
             if (rowPoints > 21){
                 totalPoints += 0; // row points exceed 21
             } else if (rowPoints == 21){
@@ -132,7 +133,6 @@ public class BlackjackSolitaire {
             } else {
                 totalPoints += 1; // row points <= 16
             }
-            System.out.println("Total points: " + totalPoints);
         }
         // Column totals
         for (int i = 0; i < grid[0].length; i++){
@@ -141,7 +141,6 @@ public class BlackjackSolitaire {
                 col[j] = grid[j][i]; // add card to col
             }
             int colPoints = calculatePoints(col);
-            System.out.println("Col points: " + colPoints);
             if (colPoints > 21){
                 totalPoints += 0;
             } else if ((i == 0 || i == 4) && colPoints == 21){
@@ -159,7 +158,6 @@ public class BlackjackSolitaire {
             } else {
                 totalPoints += 1; // row points <= 16
             }
-            System.out.println("Total points: " + totalPoints);
         }
 
         System.out.printf("Game over! You scored %d points.", totalPoints);
@@ -210,13 +208,10 @@ public class BlackjackSolitaire {
         // For each card in array
         for (Card card : array){
             totalPoints += card.getPoints(); // add card points to total
-            System.out.println("Card points: " + card.getPoints());
             if (card.getValue().equals("A")){
                 aceCount += 1; // increment aceCount
             }
         }
-        System.out.println("Aces: " + aceCount);
-        System.out.println("Points before Ace adjustment: " + totalPoints);
 
         // Adjust points for Ace cards
         while (aceCount > 0){
@@ -226,8 +221,6 @@ public class BlackjackSolitaire {
             totalPoints -= 10;
             aceCount -= 1;
         }
-
-        System.out.println("Points after Ace adjustment: " + totalPoints);
         return totalPoints;
     }
 
