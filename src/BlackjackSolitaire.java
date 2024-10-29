@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class BlackjackSolitaire {
@@ -10,8 +12,8 @@ public class BlackjackSolitaire {
 
     public BlackjackSolitaire(){
         // Setup drawPile and discardPile
-        this.drawPile = new Deck(52);
-        this.discardPile = new Deck(0);
+        this.drawPile = new Deck("standard");
+        this.discardPile = new Deck("empty");
 
         // display initial grid state
         String[][] placeholders = {
@@ -65,6 +67,7 @@ public class BlackjackSolitaire {
         int cardsPlayed = 0;
         int cardsDiscarded = 0;
 
+        // Begin while loop
         do {
             // Draw new card
             Card currentCard = drawPile.getTopCard();
@@ -89,7 +92,7 @@ public class BlackjackSolitaire {
                     if (inputNum > 0 && inputNum <= MAX_PLAYS) {
                         break; // Input is valid, exit the loop
                     }
-                } catch (NumberFormatException ignored) {
+                } catch (NumberFormatException ignored) { // ignore NumberFormatException
                 }
                 System.out.print("Invalid selection. Select again: ");
                 input = s.nextLine();
@@ -108,8 +111,54 @@ public class BlackjackSolitaire {
         } while (cardsPlayed < MAX_PLAYS);
 
         // Calculate total
+        int totalPoints = 0;
 
+        // Row totals
+        for (Card[] row : grid){
+            int rowPoints = calculatePoints(row);
+            if (rowPoints > 21){
+                totalPoints += 0; // row points exceed 21
+            } else if (rowPoints == 21){
+                totalPoints += 7; // row points = 21
+            } else if (rowPoints == 20){
+                totalPoints += 5; // row points = 20
+            } else if (rowPoints == 19){
+                totalPoints += 4; // row points = 19
+            } else if (rowPoints == 18){
+                totalPoints += 3; // row points = 18
+            } else if (rowPoints == 17){
+                totalPoints += 2; // row points = 17
+            } else {
+                totalPoints += 1; // row points <= 16
+            }
+        }
+        // Column totals
+        for (int i = 0; i < grid[0].length; i++){
+            Card[] col = new Card[grid[0].length];
+            for (int j = 0; j < grid.length; j++){
+                col[j] = grid[i][j]; // add card to col
+            }
+            int colPoints = calculatePoints(col);
+            if (colPoints > 21){
+                totalPoints += 0;
+            } else if ((i == 0 || i == 4) && colPoints == 21){
+                totalPoints += 10; // col = 21 for blackjack columns
+            } else if (colPoints == 21) {
+                totalPoints += 7; // col points = 21
+            } else if (colPoints == 20){
+                totalPoints += 5; // col points = 20
+            } else if (colPoints == 19){
+                totalPoints += 4; // col points = 19
+            } else if (colPoints == 18){
+                totalPoints += 3; // col points = 18
+            } else if (colPoints == 17){
+                totalPoints += 2; // col points = 17
+            } else {
+                totalPoints += 1; // row points <= 16
+            }
+        }
 
+        System.out.println("Final score: ");
     }
 
     public void printGrid(){
@@ -126,8 +175,10 @@ public class BlackjackSolitaire {
                     System.out.print(" ".repeat(7));
                 } else if (label.length() == 1) {
                     System.out.print(label + " ".repeat(6));
-                } else {
+                } else if (label.length() == 2) {
                     System.out.print(label + " ".repeat(5));
+                } else {
+                    System.out.print(label + " ".repeat(4));
                 }
             }
             System.out.println("|");
@@ -150,9 +201,29 @@ public class BlackjackSolitaire {
 
     public int calculatePoints(Card[] array){
         int totalPoints = 0;
+        int aceCount = 0;
+
+        // For each card in array
         for (Card card : array){
-            totalPoints += card.getPoints();
+            totalPoints += card.getPoints(); // add card points to total
+            System.out.println("Card points: " + card.getPoints());
+            if (card.getValue().equals("A")){
+                aceCount += 1; // increment aceCount
+            }
         }
+        System.out.println("Aces: " + aceCount);
+        System.out.println("Row points before Ace adjustment: " + totalPoints);
+
+        // Adjust points for Ace cards
+        while (aceCount > 0){
+            if (totalPoints <= 21){
+                break; // points within range, exit loop
+            }
+            totalPoints -= 10;
+            aceCount -= 1;
+        }
+
+        System.out.println("Row points after Ace adjustment: " + totalPoints);
         return totalPoints;
     }
 
