@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Deck {
     private ArrayList<Card> cards;
@@ -10,7 +9,6 @@ public class Deck {
          * Constructs a new deck based on one of 2 valid types:
          *   - "standard" = standard 52-card deck
          *   - "empty" = empty deck
-         *   - "placeholders" = deck of placeholder grid values
          */
 
         // Validate input
@@ -34,17 +32,19 @@ public class Deck {
     }
 
     public void shuffle(){
+        // shuffles cards; no return
         Collections.shuffle(this.cards);
     }
-
-    public Card getTopCard(){
-        return this.cards.remove(0);
-
-    }
-
     public void add(Card card){
+        // adds new card to deck; no return
         cards.add(card);
     }
+    public Card getTopCard(){
+        // removes top card from deck and returns removed card
+        return this.cards.removeFirst();
+    }
+
+
 }
 
 

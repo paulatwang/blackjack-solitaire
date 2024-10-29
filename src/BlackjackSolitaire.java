@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BlackjackSolitaire {
-    private static int MAX_DISCARDS = 4;
-    private static int MAX_PLAYS = 16;
     public static int GAME_WIDTH = 42;
     private Deck drawPile;
     private Deck discardPile;
@@ -14,7 +12,10 @@ public class BlackjackSolitaire {
         this.drawPile = new Deck("standard");
         this.discardPile = new Deck("empty");
 
-        // display initial grid state
+        // Shuffle drawPile
+        this.drawPile.shuffle();
+
+        // Setup grid with placeholder cards
         String[][] placeholders = {
                 {"1", "2", "3", "4", "5"},
                 {"6", "7", "8", "9", "10"},
@@ -27,12 +28,12 @@ public class BlackjackSolitaire {
             }
         }
 
-        // NEW GAME
+        // NEW GAME TITLE
         System.out.println("#".repeat(GAME_WIDTH));
         System.out.println("#                NEW GAME                #");
         System.out.println("#".repeat(GAME_WIDTH));
         System.out.println();
-        // Scores
+        // Scoring reference
         System.out.println("                 SCORING                 ");
         System.out.println("|______ HAND _______|_____ POINTS ______|");
         System.out.println("|     Blackjack     |        10         |");
@@ -63,6 +64,8 @@ public class BlackjackSolitaire {
         *   - display new grid state
         *   - check grid fullness
         */
+        int MAX_DISCARDS = 4;
+        int MAX_PLAYS = 16;
         int cardsPlayed = 0;
         int cardsDiscarded = 0;
         ArrayList<Integer> previousPlays = new ArrayList<>();
@@ -83,8 +86,8 @@ public class BlackjackSolitaire {
 
             // Validate user response
             while (true) {
-                input = input.replaceAll("[^a-zA-Z0-9]", "");
-                input = input.toLowerCase();
+                input = input.replaceAll("[^a-zA-Z0-9]", ""); // remove all non-alphanumeric
+                input = input.toLowerCase(); // convert to lowercase
                 if (input.equals("discard") && cardsDiscarded < MAX_DISCARDS){
                     break; // Input is valid, exit the loop
                 }
@@ -111,6 +114,8 @@ public class BlackjackSolitaire {
                 cardsPlayed++;
             }
         } while (cardsPlayed < MAX_PLAYS);
+
+        System.out.println("Grid complete. Scoring in progress...");
 
         // Calculate total
         int totalPoints = 0;
@@ -156,14 +161,18 @@ public class BlackjackSolitaire {
             } else if (colPoints == 17){
                 totalPoints += 2; // col points = 17
             } else {
-                totalPoints += 1; // row points <= 16
+                totalPoints += 1; // col points <= 16
             }
         }
-
+        System.out.println("Scoring complete!");
         System.out.printf("Game over! You scored %d points.", totalPoints);
     }
 
     public void printGrid(){
+        /*
+        * Prints out grid using GAME_WIDTH specifications
+        * */
+
         // Print header
         System.out.println(" " + "=".repeat((BlackjackSolitaire.GAME_WIDTH - 8)/2) +
                 " GRID " +
@@ -202,6 +211,7 @@ public class BlackjackSolitaire {
     }
 
     public int calculatePoints(Card[] array){
+        // calculate card points for a single array
         int totalPoints = 0;
         int aceCount = 0;
 
