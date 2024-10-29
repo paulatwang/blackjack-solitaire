@@ -3,32 +3,33 @@ import java.util.Random;
 
 public class Deck {
     private ArrayList<Card> cards;
-    private String[] arrayOfValues;
-    private String[] arrayOfSuits;
 
-    public Deck(int numCards) {
+    public Deck(String type) {
         /*
-         * Constructs a new deck based on one of 2 valid inputs:
-         *   - 52 = standard deck
-         *   - 0 = empty deck
+         * Constructs a new deck based on one of 2 valid types:
+         *   - "standard" = standard 52-card deck
+         *   - "empty" = empty deck
+         *   - "placeholders" = deck of placeholder grid values
          */
 
-        if (numCards == 0){
-            cards = new ArrayList<>();
-        } else if (numCards == 52) {
-            cards = new ArrayList<>();
-            arrayOfValues = new String[]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-            arrayOfSuits = new String[]{"S", "C", "D", "H"};
-            for (int i = 0; i < arrayOfSuits.length; i++){
-                for (int j = 0; j < arrayOfValues.length; j++){
-                    Card newCard = new Card(arrayOfSuits[i], arrayOfValues[j]);
-                    cards.add(newCard);
+        // Validate input
+        if (!type.equals("standard") && !type.equals("empty")) {
+            throw new IllegalArgumentException("Invalid deck type. Allowed types: 'standard' or 'empty'");
+        }
+
+        cards = new ArrayList<>();
+        String[] arrayOfValues = new String[]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        String[] arrayOfSuits = new String[]{"S", "C", "D", "H"}; // S: Spades, C: Clubs, D: Diamonds, H: Hearts
+
+        // Create deck for standard 52-card deck
+        if (type.equals("standard")){
+            for (String suit : arrayOfSuits){
+                for (String value : arrayOfValues){
+                    cards.add(new Card(suit, value));
                 }
             }
-        } else {
-            System.out.println("Invalid numCards input for Deck");
         }
-        System.out.println("number of cards in deck: " + cards.size());
+
     }
 
     public Card getTopCard(){
