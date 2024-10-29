@@ -23,6 +23,7 @@ A Blackjack (10 points) comprises of a score of 21 using only 2 cards. Hands tha
 # New Game Screen
 
 Upon starting a new game, you will be shown information as follows:
+
 <img width="457" alt="Screenshot 2024-10-29 at 16 07 58" src="https://github.com/user-attachments/assets/077ea4a3-0bf6-40fd-8826-863ff119d247">
 
 Enter a number between 1-16 to play a card or enter "discard" to add the card to the discard pile. 
