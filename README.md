@@ -1,8 +1,3 @@
-# Black Solitaire in Java
-CIT 5910 HW 4
-
-Completed with no collaborators.  
-
 This is a Java-based implementation of [Blackjack Solitaire](https://www.solitairenetwork.com/solitaire/blackjack-square-solitaire-game.html). Blackjack Solitaire is a one-player game with scoring rules inspired by the casino game of Blackjack, where players attempt to build a hand with a value as close to 21 as possible without exceeding 21.
 
 
